@@ -1,1 +1,1 @@
-- [ ] Give the portfolio subtle futuristic motion while preserving the approved brand, readability, and reduced-motion support.
+- [x] Give the portfolio subtle futuristic motion while preserving the approved brand, readability, and reduced-motion support.
