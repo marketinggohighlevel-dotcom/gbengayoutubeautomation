@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { Link, createFileRoute } from "@tanstack/react-router";
 import {
   ArrowDown,
@@ -294,7 +294,7 @@ function ContactSection() {
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [formMessage, setFormMessage] = useState("");
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = event.currentTarget;
     const formData = new FormData(form);
@@ -349,25 +349,25 @@ function ContactSection() {
           </div>
           <form noValidate onSubmit={handleSubmit} className="space-y-5">
             <div className="grid gap-5 sm:grid-cols-2">
-              <Field label="Name" name="name" error={fieldErrors.name} onChange={() => clearError("name")} autoComplete="name" />
-              <Field label="Email" name="email" type="email" error={fieldErrors.email} onChange={() => clearError("email")} autoComplete="email" />
+              <Field label="Name" name="name" error={fieldErrors["name"]} onChange={() => clearError("name")} autoComplete="name" />
+              <Field label="Email" name="email" type="email" error={fieldErrors["email"]} onChange={() => clearError("email")} autoComplete="email" />
             </div>
             <Field label="Channel link (optional)" name="channel" type="url" placeholder="https://youtube.com/@yourchannel" onChange={() => setFormMessage("")} />
             <div>
               <label className="field-label" htmlFor="projectType">Project type <span aria-hidden="true" className="text-primary">*</span></label>
               <div className="relative">
-                <select id="projectType" name="projectType" className="field-control appearance-none pr-10" aria-invalid={Boolean(fieldErrors.projectType)} aria-describedby={fieldErrors.projectType ? "projectType-error" : undefined} onChange={() => clearError("projectType")} defaultValue="">
+                <select id="projectType" name="projectType" className="field-control appearance-none pr-10" aria-invalid={Boolean(fieldErrors["projectType"])} aria-describedby={fieldErrors["projectType"] ? "projectType-error" : undefined} onChange={() => clearError("projectType")} defaultValue="">
                   <option value="" disabled>Select a project</option>
                   <option>YouTube scriptwriting</option><option>Documentary research</option><option>Script rewrite</option><option>Footage-led script</option><option>Other</option>
                 </select>
                 <ChevronDown aria-hidden="true" size={16} className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground" />
               </div>
-              {fieldErrors.projectType && <p id="projectType-error" className="mt-2 text-xs text-destructive">{fieldErrors.projectType}</p>}
+              {fieldErrors["projectType"] && <p id="projectType-error" className="mt-2 text-xs text-destructive">{fieldErrors["projectType"]}</p>}
             </div>
             <div>
               <label className="field-label" htmlFor="brief">Tell me about your project <span aria-hidden="true" className="text-primary">*</span></label>
-              <textarea id="brief" name="brief" rows={5} className="field-control min-h-36 resize-y leading-6" placeholder="What’s the topic, audience, and story you have in mind?" aria-invalid={Boolean(fieldErrors.brief)} aria-describedby={fieldErrors.brief ? "brief-error" : undefined} onChange={() => clearError("brief")} />
-              {fieldErrors.brief && <p id="brief-error" className="mt-2 text-xs text-destructive">{fieldErrors.brief}</p>}
+              <textarea id="brief" name="brief" rows={5} className="field-control min-h-36 resize-y leading-6" placeholder="What’s the topic, audience, and story you have in mind?" aria-invalid={Boolean(fieldErrors["brief"])} aria-describedby={fieldErrors["brief"] ? "brief-error" : undefined} onChange={() => clearError("brief")} />
+              {fieldErrors["brief"] && <p id="brief-error" className="mt-2 text-xs text-destructive">{fieldErrors["brief"]}</p>}
             </div>
             {formMessage && <p role="status" aria-live="polite" className="text-sm leading-6 text-muted-foreground">{formMessage}</p>}
             <Button type="submit" className="h-12 px-5 font-semibold">Send project inquiry <ArrowRight aria-hidden="true" /></Button>
