@@ -79,6 +79,7 @@ function PortfolioHome() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeScript, setActiveScript] = useState(0);
   const [previewPaused, setPreviewPaused] = useState(false);
+  const [activeSection, setActiveSection] = useState("home");
   const visibleProjects = useMemo(() => filterProjects(activeCategory), [activeCategory]);
 
   useEffect(() => {
@@ -111,7 +112,28 @@ function PortfolioHome() {
     return () => window.clearInterval(interval);
   }, [previewPaused]);
 
+  useEffect(() => {
+    const sections = navItems
+      .map(([, id]) => document.getElementById(id))
+      .filter((section): section is HTMLElement => section !== null);
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((first, second) => second.intersectionRatio - first.intersectionRatio)[0];
+        if (visible?.target instanceof HTMLElement) setActiveSection(visible.target.id);
+      },
+      { rootMargin: "-22% 0px -58% 0px", threshold: [0.05, 0.2, 0.45] },
+    );
+    sections.forEach((section) => observer.observe(section));
+    return () => observer.disconnect();
+  }, []);
+
   const activeNote = scriptNotes[activeScript] ?? scriptNotes[0];
+
+  function showScript(step: number) {
+    setActiveScript((current) => (current + step + scriptNotes.length) % scriptNotes.length);
+  }
 
   return (
     <div className="site-shell min-h-screen bg-background text-foreground">
@@ -123,7 +145,7 @@ function PortfolioHome() {
           </a>
           <nav aria-label="Main navigation" className="hidden items-center gap-7 lg:flex">
             {navItems.map(([label, id]) => (
-              <a className="text-link text-[0.76rem] text-muted-foreground" href={`#${id}`} key={id}>
+              <a className={`text-link text-[0.76rem] ${activeSection === id ? "text-primary" : "text-muted-foreground"}`} href={`#${id}`} key={id} aria-current={activeSection === id ? "location" : undefined}>
                 {label}
               </a>
             ))}
@@ -149,7 +171,7 @@ function PortfolioHome() {
           <nav aria-label="Mobile navigation" className="border-t quiet-rule bg-background px-4 py-3 lg:hidden">
             <div className="site-container flex flex-wrap gap-x-6 gap-y-3">
               {navItems.map(([label, id]) => (
-                <a key={id} href={`#${id}`} onClick={() => setMenuOpen(false)} className="text-sm text-muted-foreground">
+                <a key={id} href={`#${id}`} onClick={() => setMenuOpen(false)} className={`text-sm ${activeSection === id ? "text-primary" : "text-muted-foreground"}`}>
                   {label}
                 </a>
               ))}
@@ -198,13 +220,25 @@ function PortfolioHome() {
                 </div>
                 <div className="py-8 sm:py-10">
                   <p className="section-kicker mb-4">{activeNote.label}</p>
-                  <p key={activeScript} className="script-hook-copy max-w-[420px] text-[1.3rem] font-semibold leading-[1.55] sm:text-[1.65rem]">{activeNote.quote}</p>
+                  <p key={activeScript} aria-live="polite" className="script-hook-copy max-w-[420px] text-[1.3rem] font-semibold leading-[1.55] sm:text-[1.65rem]">{activeNote.quote}</p>
                 </div>
                 <div className="grid gap-4 border-t quiet-rule pt-5 sm:grid-cols-2">
                   <div className="border-l-2 border-primary pl-3"><p className="text-[0.62rem] font-bold tracking-[0.1em] text-primary">{activeNote.tag}</p><p className="mt-1.5 text-[0.7rem] leading-5 text-muted-foreground">{activeNote.cue}</p></div>
                   <div className="border-l-2 border-border pl-3"><p className="text-[0.62rem] font-bold tracking-[0.1em] text-muted-foreground">EDITOR CUE</p><p className="mt-1.5 text-[0.7rem] leading-5 text-muted-foreground">{activeNote.editorCue}</p></div>
                 </div>
-                <div className="mt-7 flex items-center justify-between border-t quiet-rule pt-4 text-[0.62rem] uppercase tracking-[0.11em] text-muted-foreground"><span>Curiosity → Context → Clarity</span><span>0{activeScript + 1} / 0{scriptNotes.length}</span></div>
+                <div className="mt-7 flex items-center justify-between gap-4 border-t quiet-rule pt-4 text-[0.62rem] uppercase tracking-[0.11em] text-muted-foreground">
+                  <span>Curiosity → Context → Clarity</span>
+                  <div className="flex items-center gap-3">
+                    <div className="flex gap-1.5" role="group" aria-label="Choose script preview">
+                      {scriptNotes.map((note, index) => (
+                        <Button key={note.label} type="button" variant="ghost" size="icon" aria-label={`Show script preview ${index + 1}`} aria-pressed={activeScript === index} onClick={() => setActiveScript(index)} className={`preview-dot size-5 ${activeScript === index ? "is-current" : ""}`}>
+                          <span className="size-1.5 rounded-full bg-current" />
+                        </Button>
+                      ))}
+                    </div>
+                    <span aria-hidden="true">0{activeScript + 1} / 0{scriptNotes.length}</span>
+                  </div>
+                </div>
               </div>
               <div className="absolute -bottom-6 -left-5 hidden items-center gap-2 border border-border bg-background px-3 py-2 text-[0.65rem] text-muted-foreground sm:flex"><span className="size-1.5 rounded-full bg-primary" /> Research-led. Viewer-first.</div>
             </div>
