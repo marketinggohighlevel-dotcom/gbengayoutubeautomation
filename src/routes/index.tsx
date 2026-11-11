@@ -126,8 +126,8 @@ function PortfolioHome() {
           <div className="hero-glow pointer-events-none absolute inset-0" aria-hidden="true" />
           <div className="site-container relative grid items-center gap-14 py-20 lg:grid-cols-[1.08fr_0.92fr] lg:gap-10 lg:py-24">
             <div data-reveal className="reveal-item max-w-[700px]">
-              <p className="eyebrow mb-7 flex items-center gap-3"><span className="h-px w-8 bg-primary" /> YouTube scriptwriter <span className="text-muted-foreground">·</span> Research <span className="text-muted-foreground">·</span> Storytelling</p>
-              <h1 className="display-title text-[clamp(3.5rem,7vw,6.35rem)]">Stories that hook.<br /><span className="text-primary">Scripts that hold attention.</span></h1>
+              <p className="eyebrow mb-7 flex flex-wrap items-center gap-x-3 gap-y-2"><span className="h-px w-8 bg-primary" /> YouTube scriptwriter <span className="text-muted-foreground">·</span> Research <span className="text-muted-foreground">·</span> Storytelling</p>
+              <h1 className="display-title text-[clamp(2.55rem,7vw,6.35rem)]">Stories that hook.<br /><span className="text-primary">Scripts that hold attention.</span></h1>
               <p className="mt-7 max-w-[580px] text-[1rem] leading-8 text-muted-foreground sm:text-[1.05rem]">I turn complex topics and compelling ideas into research-backed YouTube scripts—with strong openings, natural narration, and a clear reason to keep watching.</p>
               <div className="mt-9 flex flex-wrap gap-3">
                 <Button asChild size="lg" className="h-12 px-5 text-sm font-bold">
