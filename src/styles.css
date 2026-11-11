@@ -95,7 +95,7 @@
   --secondary: oklch(0.29 0.027 244);
   --secondary-foreground: var(--brand-ivory);
   --muted: oklch(0.29 0.027 244);
-  --muted-foreground: var(--brand-slate);
+  --muted-foreground: oklch(0.68 0.025 230);
   --accent: oklch(0.33 0.025 244);
   --accent-foreground: var(--brand-ivory);
   --destructive: oklch(0.61 0.19 26);
