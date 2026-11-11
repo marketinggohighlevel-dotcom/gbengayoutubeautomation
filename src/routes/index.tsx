@@ -303,11 +303,11 @@ function ContactSection() {
     const projectType = String(formData.get("projectType") ?? "").trim();
     const brief = String(formData.get("brief") ?? "").trim();
     const errors: Record<string, string> = {};
-    if (!name) errors.name = "Please enter your name.";
-    if (!email) errors.email = "Please enter your email address.";
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errors.email = "Enter an email address in a valid format.";
-    if (!projectType) errors.projectType = "Choose a project type.";
-    if (!brief) errors.brief = "Add a few details about your project.";
+    if (!name) errors["name"] = "Please enter your name.";
+    if (!email) errors["email"] = "Please enter your email address.";
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errors["email"] = "Enter an email address in a valid format.";
+    if (!projectType) errors["projectType"] = "Choose a project type.";
+    if (!brief) errors["brief"] = "Add a few details about your project.";
     setFieldErrors(errors);
     if (Object.keys(errors).length > 0) {
       setFormMessage("Review the highlighted fields. Nothing has been sent.");
@@ -383,7 +383,7 @@ type FieldProps = {
   label: string;
   name: string;
   type?: string;
-  error?: string;
+  error?: string | undefined;
   placeholder?: string;
   autoComplete?: string;
   onChange?: () => void;
