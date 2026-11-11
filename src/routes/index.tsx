@@ -10,6 +10,8 @@ import {
   ChevronDown,
   FileText,
   Menu,
+  Pause,
+  Play,
   X,
 } from "lucide-react";
 
@@ -48,9 +50,35 @@ const navItems = [
   ["Contact", "contact"],
 ] as const;
 
+const scriptNotes = [
+  {
+    label: "THE QUESTION BEHIND THE STORY",
+    quote: "“What if the secret to changing an industry wasn’t a faster car—but a better way to think about the journey?”",
+    tag: "HOOK",
+    cue: "Start with the question. Reveal the context next.",
+    editorCue: "Open on archival road footage. Let the image breathe.",
+  },
+  {
+    label: "THE MOMENT BEFORE THE COMEBACK",
+    quote: "“Before a runner reaches the finish, there’s a moment the crowd never sees: the decision to try again.”",
+    tag: "HUMAN STAKES",
+    cue: "Begin close. Let the wider story arrive after the person.",
+    editorCue: "Hold on the empty track before the first step.",
+  },
+  {
+    label: "THE SYSTEM BENEATH THE SKYLINE",
+    quote: "“A city can rise from the desert. But the story starts underground—with the systems that keep it moving.”",
+    tag: "OPEN LOOP",
+    cue: "Show the visible result, then ask what supports it.",
+    editorCue: "Cut from skyline to infrastructure detail.",
+  },
+] as const;
+
 function PortfolioHome() {
   const [activeCategory, setActiveCategory] = useState<PortfolioCategory>("All");
   const [menuOpen, setMenuOpen] = useState(false);
+  const [activeScript, setActiveScript] = useState(0);
+  const [previewPaused, setPreviewPaused] = useState(false);
   const visibleProjects = useMemo(() => filterProjects(activeCategory), [activeCategory]);
 
   useEffect(() => {
@@ -74,6 +102,16 @@ function PortfolioHome() {
     targets.forEach((target) => observer.observe(target));
     return () => observer.disconnect();
   }, []);
+
+  useEffect(() => {
+    if (previewPaused || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const interval = window.setInterval(() => {
+      setActiveScript((current) => (current + 1) % scriptNotes.length);
+    }, 7200);
+    return () => window.clearInterval(interval);
+  }, [previewPaused]);
+
+  const activeNote = scriptNotes[activeScript] ?? scriptNotes[0];
 
   return (
     <div className="site-shell min-h-screen bg-background text-foreground">
@@ -124,8 +162,9 @@ function PortfolioHome() {
       <main>
         <section id="home" className="relative flex min-h-[760px] items-center overflow-hidden border-b quiet-rule pt-24 sm:min-h-[800px]">
           <div className="hero-glow pointer-events-none absolute inset-0" aria-hidden="true" />
+          <div className="hero-grid-texture pointer-events-none absolute inset-0" aria-hidden="true" />
           <div className="site-container relative grid items-center gap-14 py-20 lg:grid-cols-[1.08fr_0.92fr] lg:gap-10 lg:py-24">
-            <div data-reveal className="reveal-item max-w-[700px]">
+            <div data-reveal className="reveal-item hero-copy max-w-[700px]">
               <p className="eyebrow mb-7 flex flex-wrap items-center gap-x-3 gap-y-2"><span className="h-px w-8 bg-primary" /> YouTube scriptwriter <span className="text-muted-foreground">·</span> Research <span className="text-muted-foreground">·</span> Storytelling</p>
               <h1 className="display-title text-[clamp(2.55rem,7vw,6.35rem)]">Stories that hook.<br /><span className="text-primary">Scripts that hold attention.</span></h1>
               <p className="mt-7 max-w-[580px] text-[1rem] leading-8 text-muted-foreground sm:text-[1.05rem]">I turn complex topics and compelling ideas into research-backed YouTube scripts—with strong openings, natural narration, and a clear reason to keep watching.</p>
@@ -142,25 +181,30 @@ function PortfolioHome() {
               </div>
             </div>
 
-            <div data-reveal className="reveal-item relative mx-auto w-full max-w-[520px] lg:ml-auto">
+            <div data-reveal className="reveal-item hero-art relative mx-auto w-full max-w-[520px] lg:ml-auto">
               <div className="absolute -inset-7 rounded-[50%] bg-primary/5 blur-3xl" aria-hidden="true" />
-              <div className="script-paper relative rotate-[1deg] border border-border bg-card p-5 sm:p-7">
+              <div className="script-paper script-panel relative rotate-[1deg] border border-border bg-card p-5 sm:p-7">
                 <div className="flex items-start justify-between gap-3 border-b quiet-rule pb-4">
                   <div className="flex items-center gap-3">
                     <span className="grid size-9 place-items-center rounded-sm bg-primary text-primary-foreground"><FileText aria-hidden="true" size={17} /></span>
-                    <div><p className="text-xs font-bold">FIELD NOTES / 001</p><p className="mt-1 text-[0.67rem] text-muted-foreground">STORY DEVELOPMENT</p></div>
+                    <div><p className="text-xs font-bold">FIELD NOTES / 001</p><p className="mt-1 text-[0.67rem] text-muted-foreground"><span className="status-pip mr-1.5 inline-block size-1.5 rounded-full bg-primary align-middle" /> STORY DEVELOPMENT</p></div>
                   </div>
-                  <span className="border border-border px-2 py-1 text-[0.6rem] uppercase tracking-[0.09em] text-muted-foreground">Sample opening</span>
+                  <div className="flex items-center gap-2">
+                    <span className="hidden border border-border px-2 py-1 text-[0.6rem] uppercase tracking-[0.09em] text-muted-foreground sm:inline">Sample opening</span>
+                    <Button type="button" variant="ghost" size="icon" className="size-8 text-muted-foreground" aria-label={previewPaused ? "Resume animated script preview" : "Pause animated script preview"} aria-pressed={previewPaused} onClick={() => setPreviewPaused((paused) => !paused)}>
+                      {previewPaused ? <Play aria-hidden="true" size={14} /> : <Pause aria-hidden="true" size={14} />}
+                    </Button>
+                  </div>
                 </div>
                 <div className="py-8 sm:py-10">
-                  <p className="section-kicker mb-4">The question behind the story</p>
-                  <p className="max-w-[420px] text-[1.3rem] font-semibold leading-[1.55] sm:text-[1.65rem]">“What if the secret to changing an industry wasn’t a faster car—but a better way to think about the journey?”</p>
+                  <p className="section-kicker mb-4">{activeNote.label}</p>
+                  <p key={activeScript} className="script-hook-copy max-w-[420px] text-[1.3rem] font-semibold leading-[1.55] sm:text-[1.65rem]">{activeNote.quote}</p>
                 </div>
                 <div className="grid gap-4 border-t quiet-rule pt-5 sm:grid-cols-2">
-                  <div className="border-l-2 border-primary pl-3"><p className="text-[0.62rem] font-bold tracking-[0.1em] text-primary">HOOK</p><p className="mt-1.5 text-[0.7rem] leading-5 text-muted-foreground">Start with the question. Reveal the context next.</p></div>
-                  <div className="border-l-2 border-border pl-3"><p className="text-[0.62rem] font-bold tracking-[0.1em] text-muted-foreground">EDITOR CUE</p><p className="mt-1.5 text-[0.7rem] leading-5 text-muted-foreground">Open on archival road footage. Let the image breathe.</p></div>
+                  <div className="border-l-2 border-primary pl-3"><p className="text-[0.62rem] font-bold tracking-[0.1em] text-primary">{activeNote.tag}</p><p className="mt-1.5 text-[0.7rem] leading-5 text-muted-foreground">{activeNote.cue}</p></div>
+                  <div className="border-l-2 border-border pl-3"><p className="text-[0.62rem] font-bold tracking-[0.1em] text-muted-foreground">EDITOR CUE</p><p className="mt-1.5 text-[0.7rem] leading-5 text-muted-foreground">{activeNote.editorCue}</p></div>
                 </div>
-                <div className="mt-7 flex items-center justify-between border-t quiet-rule pt-4 text-[0.62rem] uppercase tracking-[0.11em] text-muted-foreground"><span>Curiosity → Context → Clarity</span><span>01 / 04</span></div>
+                <div className="mt-7 flex items-center justify-between border-t quiet-rule pt-4 text-[0.62rem] uppercase tracking-[0.11em] text-muted-foreground"><span>Curiosity → Context → Clarity</span><span>0{activeScript + 1} / 0{scriptNotes.length}</span></div>
               </div>
               <div className="absolute -bottom-6 -left-5 hidden items-center gap-2 border border-border bg-background px-3 py-2 text-[0.65rem] text-muted-foreground sm:flex"><span className="size-1.5 rounded-full bg-primary" /> Research-led. Viewer-first.</div>
             </div>
@@ -219,7 +263,7 @@ function PortfolioHome() {
             </div>
             <div className="divide-y divide-border border-y quiet-rule">
               {services.map((service) => (
-                <article data-reveal key={service.number} className="reveal-item grid gap-3 py-7 sm:grid-cols-[62px_1fr] sm:gap-5">
+                <article data-reveal key={service.number} className="reveal-item service-row grid gap-3 py-7 sm:grid-cols-[62px_1fr] sm:gap-5">
                   <span className="eyebrow pt-1">{service.number}</span>
                   <div><h3 className="text-lg font-bold">{service.title}</h3><p className="mt-2 max-w-xl text-sm leading-6 text-muted-foreground">{service.description}</p></div>
                 </article>
