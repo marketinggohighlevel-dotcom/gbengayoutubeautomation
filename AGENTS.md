@@ -28,3 +28,6 @@ use the editor.
   own key and store it in Secrets.
 - **Secrets.** Lovable manages them. Do not put secret values in the repo.
 <!-- LOVABLE:END -->
+
+## Portfolio structure
+- Keep the portfolio’s editable profile and sample content in `src/data/portfolio.ts`, with `/` as the single-page portfolio and `/work/$slug` as individual script-sample pages, so repeated details stay consistent and each sample remains directly linkable.
