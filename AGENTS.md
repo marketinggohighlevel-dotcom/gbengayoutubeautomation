@@ -31,3 +31,4 @@ use the editor.
 
 ## Portfolio structure
 - Keep the portfolio’s editable profile and sample content in `src/data/portfolio.ts`, with `/` as the single-page portfolio and `/work/$slug` as individual script-sample pages, so repeated details stay consistent and each sample remains directly linkable.
+- Keep portfolio animation lightweight and motion-aware: CSS handles visual transitions, observers reveal sections and track the active section, and the script-preview timer pauses on request and respects reduced-motion settings.
