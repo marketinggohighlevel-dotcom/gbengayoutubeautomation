@@ -416,8 +416,9 @@ function ContactSection() {
           <div className="mt-9 flex flex-wrap gap-3">
             <Button asChild className="h-12 px-5 font-semibold"><a href={`mailto:${profile.email}`}><span className="sr-only">Email Gbenga at </span>{profile.email} <ArrowUpRight aria-hidden="true" /></a></Button>
             <Button asChild variant="outline" className="h-12 px-5"><a href={profile.whatsappUrl} target="_blank" rel="noreferrer">WhatsApp <ArrowUpRight aria-hidden="true" /></a></Button>
+            <Button asChild variant="outline" className="h-12 px-5"><a href={profile.upworkUrl} target="_blank" rel="noreferrer">Hire me on Upwork <ArrowUpRight aria-hidden="true" /></a></Button>
           </div>
-          <p className="mt-4 text-xs text-muted-foreground">Prefer a direct message? Both contact links are ready to use.</p>
+          <p className="mt-4 text-xs text-muted-foreground">Reach out directly or connect with me through Upwork.</p>
         </div>
 
         <div data-reveal className="reveal-item border-t quiet-rule pt-6">
