@@ -1,1 +1,4 @@
 - [x] Give the portfolio subtle futuristic motion while preserving the approved brand, readability, and reduced-motion support.
+- [ ] Review the two shared Drive folders and script-to-YouTube document.
+- [ ] Add every supplied script sample to the portfolio with matching video links where available.
+- [ ] Verify the script list and sample-to-video links in the preview.
